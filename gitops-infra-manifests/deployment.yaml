@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dynamic-migration-app
+  namespace: target-commercial-prod
+spec:
+  replicas: 3 # Running 3 instances across availability zones for high availability
+  selector:
+    matchLabels:
+      app: web-migration
+  template:
+    metadata:
+      labels:
+        app: web-migration
+    spec:
+      containers:
+      - name: web-container
+        # CRITICAL: Point this to your actual Docker Hub image name that your Action built!
+        image: docker.io/YOUR_DOCKERHUB_USERNAME/migration-app:latest 
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: migration-service
+  namespace: target-commercial-prod
+spec:
+  type: LoadBalancer # Spins up an AWS network load balancer automatically
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: web-migration
