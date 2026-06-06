@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: dynamic-migration-pipeline
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'git@github.com:muneefalfadli-ctrl/kubernete.git'
+    targetRevision: HEAD
+    path: gitops-infra-manifests # 🟢 Changed from manifests to match your actual folder
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: target-commercial-prod
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
