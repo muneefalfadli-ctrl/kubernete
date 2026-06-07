@@ -16,7 +16,7 @@ spec:
       containers:
       - name: web-container
         # CRITICAL: Point this to your actual Docker Hub image name that your Action built!
-        image: docker.io/YOUR_DOCKERHUB_USERNAME/migration-app:latest 
+        image: docker.io/malfadli/kubernetes:latest 
         ports:
         - containerPort: 8080
 ---
